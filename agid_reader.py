@@ -8,7 +8,7 @@ class AgidReader(object):
     def __init__(self, path='/home/alta/imports/agid-2016.01.19'):
         self.entries = {}
         self.path = path
-        print("object created")
+        # print("object created")
 
     def read_agid(self):
         # main file - infl.txt
