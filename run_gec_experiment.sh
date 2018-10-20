@@ -34,4 +34,4 @@ endif
 set PYTHONBIN=/home/dawna/kmk/anaconda2/bin/python
 
 # run sequence labelling
-$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/experiment.py $FILE
+$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE
