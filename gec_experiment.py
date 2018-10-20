@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import sys
-sys.path.insert(0,'/home/alta/BLTSpeaking/ged-pm574/local/sequence-labeler')
 from helper import *
 from predict_probs import labeler_predict # a routine to call sequence_labeler
 
