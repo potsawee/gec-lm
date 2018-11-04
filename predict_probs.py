@@ -11,21 +11,7 @@ import labeler
 import experiment
 import numpy
 import collections
-
-class WordPrediction(object):
-    def __init__(self):
-        self.word = ''
-        self.c_prob = None
-        self.i_prob = None
-    def __init__(self, word, c_prob, i_prob):
-        self.word = word
-        self.c_prob = c_prob
-        self.i_prob = i_prob
-    def add(self, word, c_prob, i_prob):
-        self.word = word
-        self.c_prob = c_prob
-        self.i_prob = i_prob
-
+from helper import WordPrediction
 
 def labeler_predict(model_path, input_file, c_prob=True):
     '''

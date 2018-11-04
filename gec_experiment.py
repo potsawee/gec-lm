@@ -11,11 +11,12 @@ model_path = '/home/alta/BLTSpeaking/ged-pm574/clctraining-v3/lib/models/clctrai
 bin_path = '/home/dawna/mgb3/transcription/convert/base/bin/'
 def main():
 
-    if len(sys.argv) != 2:
-        print("Usage: experiment.py file")
+    if len(sys.argv) != 3:
+        print("Usage: experiment.py file lattices")
         return
 
     path = sys.argv[1]
+    lattices = sys.argv[2]
 
     sentences = []
 
@@ -55,37 +56,49 @@ def main():
         sentence_ebnf_path = tmp + 'sentence' + str(i) + '.ebnf'
         network.write_ebnf(sentence_ebnf_path)
 
-    # EBNF -> SLF
+    # EBNF -> SLF (.lat)
     hparse = bin_path + 'HParse'
+    # lattice_path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/test/task1/task1_script1.1/decode/lattices/'
     for i in range(len(sentences_prediction)):
         ebnf = tmp + 'sentence' + str(i) +  '.ebnf'
-        slf = tmp + 'sentence' + str(i) + '.slf'
-        command = '{} {} {}'.format(hparse, ebnf, slf)
+        lat = lattices + '/sentence' + str(i) + '.lat'
+        command = '{} {} {}'.format(hparse, ebnf, lat)
+        gzip_command = 'gzip {}'.format(lat)
         os.system(command)
-        print('write: ' + slf)
+        os.system(gzip_command)
+        print('write: ' + lat)
 
-    # Rescore to find 1-best
-    hlrescore = bin_path + 'HLRescore'
-    n_gram_model = '/home/alta/BLTSpeaking/exp-yw396/lms/LM.grp14/lms/tg_train.lm'
-    wordlist = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/combined.lst'
+    # Write SCP
+    scp = lattices + '/flist.scp'
+    make_scp(scp, lattices, len(sentences_prediction))
 
-    for i in range(len(sentences_prediction)):
-        slf = tmp + 'sentence' + str(i) + '.slf'
-        mlf = tmp + 'sentence' + str(i) + '.mlf'
-        # hlrescore, output, model, wordlist, slf
-        command = '{} -T 1 -A -V -D -C /home/alta/BLTSpeaking/ged-pm574/gec-lm/hlrescore.cfg -X slf -i {} -n {} -f {} {}'.format(hlrescore, mlf, n_gram_model, wordlist, slf)
-        os.system(command)
-        print('decode: ' + mlf)
 
-    print('-------------------------------------------------------')
-    for i in range(len(sentences_prediction)):
-        mlf = tmp + 'sentence' + str(i) + '.mlf'
-        original = ' '.join(sentences[i])
-        gec_out = ' '.join(mlf_to_sentence(mlf))
-        print('orig: {}'.format(original))
-        print('hypo: {}'.format(gec_out))
-        print('-------------------------------------------------------')
-
+    # ------------------- Rescoring -------------------------- #
+    # # Rescore to find 1-best
+    # hlrescore = bin_path + 'HLRescore'
+    # # n_gram_model = '/home/alta/BLTSpeaking/exp-yw396/lms/LM.grp14/lms/tg_train.lm'
+    # # wordlist = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/combined.lst'
+    # n_gram_model = '/home/alta/BLTSpeaking/exp-graphemic-kaldi-ar527/lms/google/fg_train.lm'
+    # wordlist = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agaid-v1.uniq.lst'
+    #
+    # for i in range(len(sentences_prediction)):
+    #     slf = tmp + 'sentence' + str(i) + '.slf'
+    #     mlf = tmp + 'sentence' + str(i) + '.mlf'
+    #     # hlrescore, output, model, wordlist, slf
+    #     # command = '{} -T 1 -A -V -D -C /home/alta/BLTSpeaking/ged-pm574/gec-lm/hlrescore.cfg -X slf -i {} -n {} -f {} {}'.format(hlrescore, mlf, n_gram_model, wordlist, slf)
+    #     command = '{} -C /home/alta/BLTSpeaking/ged-pm574/gec-lm/hlrescore.cfg -X slf -i {} -n {} -f {} {}'.format(hlrescore, mlf, n_gram_model, wordlist, slf)
+    #     os.system(command)
+    #     print('decode: ' + mlf)
+    #
+    # print('-------------------------------------------------------')
+    # for i in range(len(sentences_prediction)):
+    #     mlf = tmp + 'sentence' + str(i) + '.mlf'
+    #     original = ' '.join(sentences[i])
+    #     gec_out = ' '.join(mlf_to_sentence(mlf))
+    #     print('orig: {}'.format(original))
+    #     print('hypo: {}'.format(gec_out))
+    #     print('-------------------------------------------------------')
+    # ---------------------------------------------------------- #
 
 def write_probs(sentences_prediction, path):
     with open(path, 'w') as file:
@@ -96,24 +109,24 @@ def write_probs(sentences_prediction, path):
     print('write: ' + path)
 
 
-def dev1(sentences_prediction, agid):
-    print('-------------------------------------------------------------------------')
-    print("{:20s}  {:s} {}".format('original', 'c_prob:', 'candidates (if any)'))
-    print('-------------------------------------------------------------------------')
-
-
-    for sentence_prediction in sentences_prediction:
-        for this in sentence_prediction: # this = word_prediction object
-            if this.c_prob < 0.5:
-                if this.word in agid.entries:
-                    candidates = agid.entries[this.word].infl_words
-                    print("{:20s}  {:.4f}: {}".format(this.word, this.c_prob, ', '.join(candidates)))
-                    continue
-                else:
-                    print("{:20s}  {:.4f}: <no-candidate-found>".format(this.word, this.c_prob))
-                    continue
-            print("{:20s}  {:.4f}".format(this.word, this.c_prob))
-        print('-------------------------------------------------------------------------')
+# def dev1(sentences_prediction, agid):
+#     print('-------------------------------------------------------------------------')
+#     print("{:20s}  {:s} {}".format('original', 'c_prob:', 'candidates (if any)'))
+#     print('-------------------------------------------------------------------------')
+#
+#
+#     for sentence_prediction in sentences_prediction:
+#         for this in sentence_prediction: # this = word_prediction object
+#             if this.c_prob < 0.5:
+#                 if this.word in agid.entries:
+#                     candidates = agid.entries[this.word].infl_words
+#                     print("{:20s}  {:.4f}: {}".format(this.word, this.c_prob, ', '.join(candidates)))
+#                     continue
+#                 else:
+#                     print("{:20s}  {:.4f}: <no-candidate-found>".format(this.word, this.c_prob))
+#                     continue
+#             print("{:20s}  {:.4f}".format(this.word, this.c_prob))
+#         print('-------------------------------------------------------------------------')
 
 
 

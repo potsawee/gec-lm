@@ -1,3 +1,4 @@
+import sys
 from helper import AgidHandler
 from tqdm import tqdm
 
@@ -54,7 +55,22 @@ def main3():
         for word in wlist:
             file.write('{}\n'.format(word.upper()))
 
+def gedtsv(path, out):
+    wlist = []
+    with open(path, 'r') as file:
+        for line in file:
+            if line == '\n':
+                continue
+            word = line.split()[0].strip().upper()
+            if word not in wlist:
+                wlist.append(word)
+
+    with open(out, 'w') as file:
+        for word in wlist:
+            file.write('{}\n'.format(word.upper()))
 
 
 if __name__ == '__main__':
-    main3()
+    path = sys.argv[1]
+    out = sys.argv[2]
+    gedtsv(path, out)
