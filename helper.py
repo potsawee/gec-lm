@@ -4,6 +4,8 @@ This script is a collection of classes and data structures for candidate word ge
 import re
 import pdb
 
+empty_tok = '!NULL'
+
 class Generator(object):
     '''
     Main class for word generator
@@ -29,11 +31,11 @@ class Generator(object):
 
 class Preposition(object):
     def __init__(self):
-        self.list = ['ABOUT', 'AT', 'BY', 'FOR', 'FROM', 'IN', 'OF', 'ON', 'TO', 'WITH']
+        self.list = [empty_tok, 'about', 'at', 'by', 'for', 'from', 'in', 'of', 'on', 'to', 'with']
 
 class Article(object):
     def __init__(self):
-        self.list = ['A', 'AN', 'THE']
+        self.list = [empty_tok, 'a', 'an', 'the']
 
 class AgidHandler(object):
     '''
@@ -90,10 +92,10 @@ class AgidHandler(object):
     def get_candidates(self, word):
         if word in self.word_keys:
             key = self.word_keys[word]
-            return self.groups[key]
+            return self.groups[key] + [empty_tok]
 
         else: # not in AGID return the orignal word
-            return [word]
+            return [word] + [empty_tok]
 
 class Network(object):
     '''
@@ -179,3 +181,46 @@ def mlf_to_sentence(mlf):
         words.append(word)
 
     return words
+
+def mlf_to_sentences(mlf):
+    '''
+    #!MLF!#
+    "tmp/sentence5.rec"
+    0 0 <s> 0.000000
+    0 0 HE -5.737978
+    0 0 IS -2.383160
+    0 0 PLAY -10.001839
+    0 0 TENNIS -11.317693
+    0 0 </s> -2.735331
+    .
+    '''
+
+    with open(mlf, 'r') as file:
+        lines = file.readlines()
+    words = []
+    sentences = []
+    for line in lines[1:]:
+        line = line.strip()
+        if line[-5:] == '.rec"':
+            continue
+        elif line == '.':
+            sentences.append(words)
+            words = []
+            continue
+
+        items = line.split()
+        # try:
+        word = items[2].lower()
+        # except:
+        #     print(line)
+        #     pdb.set_trace()
+        words.append(word)
+        # pdb.set_trace()
+
+    return sentences
+
+def make_scp(scp_path, lat_path, num_sentences):
+    with open(scp_path, 'w') as file:
+        for i in range(num_sentences):
+            file.write('{}/sentence{}.lat\n'.format(lat_path, i))
+    print('make_scp done!')
