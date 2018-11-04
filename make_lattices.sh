@@ -3,12 +3,15 @@
 
 set ALLARGS = ($*)
 # Check Number of Args
-if ( $#argv != 1 ) then
-   echo "Usage: $0 file"
+if ( $#argv != 2 ) then
+   echo "Usage: $0 file lattices"
    exit 100
 endif
 
 set FILE=$1
+set LATTICES=$2
+
+if (! -d $LATTICES ) mkdir -p $LATTICES
 
 
 # Set path to CUDA toolkit
@@ -34,4 +37,4 @@ endif
 set PYTHONBIN=/home/dawna/kmk/anaconda2/bin/python
 
 # run sequence labelling
-$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE
+$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE $LATTICES
