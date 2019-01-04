@@ -3,16 +3,18 @@
 
 set ALLARGS = ($*)
 # Check Number of Args
-if ( $#argv != 3 ) then
-   echo "Usage: $0 file lattices log"
+if ( $#argv != 4 ) then
+   echo "Usage: $0 file lattices threshold log"
    exit 100
 endif
 
 set FILE=$1
 set LATTICES=$2
-set LOG=$3
+set THRESHOLD=$3
+set LOG=$4
 
 if (! -d $LATTICES ) mkdir -p $LATTICES
+if (! -d $LATTICES/tmp ) mkdir -p $LATTICES/tmp
 
 
 # Set path to CUDA toolkit
@@ -38,4 +40,4 @@ endif
 set PYTHONBIN=/home/dawna/kmk/anaconda2/bin/python
 
 # run sequence labelling
-$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE $LATTICES >> $LOG
+$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE $LATTICES $THRESHOLD >> $LOG

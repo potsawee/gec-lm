@@ -6,17 +6,20 @@ from helper import *
 from predict_probs import labeler_predict # a routine to call sequence_labeler
 
 # Global paths -> will be changed so that it reads a config file
-tmp = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/tmp/'
+# tmp = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/tmp/'
 model_path = '/home/alta/BLTSpeaking/ged-pm574/clctraining-v3/lib/models/clctraining-v3.nopunc.model'
 bin_path = '/home/dawna/mgb3/transcription/convert/base/bin/'
 def main():
 
-    if len(sys.argv) != 3:
-        print("Usage: experiment.py file lattices")
+    if len(sys.argv) != 4:
+        print("Usage: experiment.py file lattices threshold")
         return
 
     path = sys.argv[1]
     lattices = sys.argv[2]
+    ged_threshold = float(sys.argv[3])
+    
+    tmp = lattices + '/tmp/'
 
     sentences = []
 
@@ -37,7 +40,7 @@ def main():
 
     sentences_prediction = labeler_predict(model_path, tmp1, c_prob=True)
     word_generator = Generator()
-    ged_threshold = 0.9
+    # ged_threshold = 0.50
 
     gedout = lattices + '/ged_preds.tsv'
     write_probs(sentences_prediction, gedout)
@@ -47,6 +50,7 @@ def main():
         for w in sentence_prediction:
 
             if w.c_prob < ged_threshold:
+                # saying it's wrong threshold 1.0 means 100% recall GED
                 _, candidates = word_generator.find_candidates(w.word)
                 network.add_stage(candidates)
 
