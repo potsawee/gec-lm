@@ -21,6 +21,7 @@ if (! -d $OUT ) mkdir -p $OUT
 if (! -d $RESCORELAT ) mkdir -p $RESCORELAT
 
 
+<<<<<<< HEAD
 # set HLRESCOREBIN=base/bin/HLRescore
 set HLRESCOREBIN=/home/htk3.5/exp-ar527/alpha3/bin.cpu/HLRescore
 set HLRESCORECFG=lib/hlrescore.cfg
@@ -39,6 +40,17 @@ set NGRAMMODEL=/home/alta/BLTSpeaking/ged-pm574/n-gram-lm/lms/google-ar527/fg_tr
 # set SCP=myscp.scp
 set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dtal.uniq.lst2
 # set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+conll.uniq.lst
+=======
+set HLRESCOREBIN=base/bin/HLRescore
+set HLRESCORECFG=lib/hlrescore.cfg
+# set LATTICEDIR=test/task3/task3_script1.1/decode/lattices
+# set NGRAMMODEL=/home/alta/BLTSpeaking/ged-pm574/n-gram-lm/lms/google-ar527/fg_train.lm
+set NGRAMMODEL=/home/alta/BLTSpeaking/ged-pm574/n-gram-lm/lms/LM.grp14/lms/fg_train.lm
+# set MLF=test/task3/task3_script1.1/decode/rescore/tg_21.0_0.0/task3_task3_script1.mlf
+# set RESCORELAT=test/task3/task3_script1.1/decode/rescore/tg_21.0_0.0/lattices
+# set SCP=myscp.scp
+set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dtal.uniq.lst
+>>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
 
 
 # $HLRESCOREBIN -A -D -V -C $HLRESCORECFG -L $LATTICEDIR -T 1 -t 300.0 1000.0 -s 21.0 -p 0.0 -n $NGRAMMODEL -f -i $MLF -w -l $RESCORELAT -S $SCP $VOCAB
