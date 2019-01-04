@@ -69,12 +69,11 @@ def gedtsv(path, out):
         for word in wlist:
             file.write('{}\n'.format(word.upper()))
 
-<<<<<<< HEAD
 def gecsrc():
     path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.gec.src'
     out = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/conll.lst'
     wlist = []
-    with open(path, 'r') as file:
+    with open (path, 'r') as file:
         for line in file:
             if line == '\n':
                 continue
@@ -94,16 +93,27 @@ def gecsrc():
         for word in wlist:
             file.write('{}\n'.format(word.upper()))
 
+def onebillionlst2rescorelst():
+    onebillionlst = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v3/one-billion/lib/wlists/train.lst.index'
+    rescorelst = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v3/one-billion/lib/wlists/rescorelst/onebillion.lst'
+    wlist = ['!!UNK', '<s>', '</s>']
+    with open(onebillionlst, 'r') as file:
+        for line in file:
+            if line == '\n':
+                continue
+            word = line.split()[1].strip().upper()
+            if word not in wlist:
+                wlist.append(word)
+
+    with open(rescorelst, 'w') as file:
+        for word in wlist:
+            file.write('{}\n'.format(word.upper()))
+
+
 
 if __name__ == '__main__':
     # path = sys.argv[1]
     # out = sys.argv[2]
     # gedtsv(path, out)
-    gecsrc()
-=======
-
-if __name__ == '__main__':
-    path = sys.argv[1]
-    out = sys.argv[2]
-    gedtsv(path, out)
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
+    # gecsrc()
+    onebillionlst2rescorelst()

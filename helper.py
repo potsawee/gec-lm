@@ -92,7 +92,6 @@ class AgidHandler(object):
     def get_candidates(self, word):
         if word in self.word_keys:
             key = self.word_keys[word]
-<<<<<<< HEAD
             # return self.groups[key] + [empty_tok]
             return self.groups[key]
 
@@ -100,12 +99,6 @@ class AgidHandler(object):
             # return [word] + [empty_tok]
             return [word]
 
-=======
-            return self.groups[key] + [empty_tok]
-
-        else: # not in AGID return the orignal word
-            return [word] + [empty_tok]
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
 
 class Network(object):
     '''
@@ -146,17 +139,11 @@ class Network(object):
                         pass
                     else:
                         line = '\t{}\n'.format(stage[0])
-<<<<<<< HEAD
                         line = line.replace('%', '\%') # for partial
                         file.write(line.upper())
                 else:
                     line = '\t({})\n'.format(' | '.join(stage))
                     line = line.replace('%', '\%') # for partial
-=======
-                        file.write(line.upper())
-                else:
-                    line = '\t({})\n'.format(' | '.join(stage))
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
                     file.write(line.upper())
 
             file.write('\t\\<\\/s\\>\n')
@@ -229,10 +216,7 @@ def mlf_to_sentences(mlf):
         items = line.split()
         # try:
         word = items[2].lower()
-<<<<<<< HEAD
         word = word.strip('"')
-=======
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
         # except:
         #     print(line)
         #     pdb.set_trace()

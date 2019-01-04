@@ -37,15 +37,10 @@ def main():
 
     sentences_prediction = labeler_predict(model_path, tmp1, c_prob=True)
     word_generator = Generator()
-    ged_threshold = 0.5
+    ged_threshold = 0.9
 
-<<<<<<< HEAD
     gedout = lattices + '/ged_preds.tsv'
     write_probs(sentences_prediction, gedout)
-=======
-    tmp2 = tmp + 'tmp2.txt'
-    write_probs(sentences_prediction, tmp2)
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
 
     for i, sentence_prediction in enumerate(sentences_prediction):
         network = Network()

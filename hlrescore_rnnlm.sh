@@ -19,29 +19,18 @@ set RESCORELAT=$OUT/lattices
 if (! -d $OUT ) mkdir -p $OUT
 if (! -d $RESCORELAT ) mkdir -p $RESCORELAT
 
-<<<<<<< HEAD
 # set HLRESCOREBIN=/home/mifs/xc257/RNNLM/htk_3.4.1.cuedrnnlm.v1.0.maxlogp/HTKTools/HLRescore
 set HLRESCOREBIN=/home/mifs/xc257/RNNLM/htk.cuedrnnlm.v1.1/HTKTools/HLRescore
 
 # set CFG=/home/dawna/mgb3/transcription/exp-xc257/KB3CTD+R1/decode-LM04-S1seg.RNNLM02.v1.1/base/scripts/hlr.cfg.approx_ng3
 set CFG=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/hlrescore-rnnlm-cfgs/hlr.cfg.approx_ng4 # 3 or 4
-set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+conll.uniq.lst
-# set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dtal.uniq.lst
-# set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dtal.uniq.lst2
-=======
-set HLRESCOREBIN=/home/mifs/xc257/RNNLM/htk_3.4.1.cuedrnnlm.v1.0.maxlogp/HTKTools/HLRescore
-# set CFG=/home/dawna/mgb3/transcription/exp-xc257/KB3CTD+R1/decode-LM04-S1seg.RNNLM02.v1.1/base/scripts/hlr.cfg.approx_ng3
-set CFG=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/hlrescore-rnnlm-cfgs/hlr.cfg.approx_ng4
+# set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+conll.uniq.lst
 set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dtal.uniq.lst
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
-
-
 
 
 # set LMMODEL=/home/dawna/mgb3/transcription/exp-xc257/KB3CTD+R1/decode-LM04-S1seg.RNNLM02.v1.1/lib/lms.rescore/rnnlm.su3words/ngrnn.intpltlm
 # set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/rnnlm/ngrnn.intpltlm
 # set LMMODEL=ngrnn.intpltlm
-<<<<<<< HEAD
 # set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/rnnlm.su3words/ngrnn3.intpltlm
 # set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/rnnlm.su3words/ngrnn2.intpltlm
 
@@ -54,19 +43,13 @@ set VOCAB=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/one-billion+agid+dt
 # Google One-billion RNNLMs
 # set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v1/rnnlm-one-billion/RNN_weight.OOS.cuedrnnlm.debug3.alpha/rnnlm.inpt
 # Google One-billion su-RNNLMs
-set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v1/rnnlm-one-billion/RNN_weight.OOS.cuedrnnlm.su3words.cont2/rnnlm.inpt
-=======
-# set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/rnnlm.su3words/rnnlm.su3words
+# set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v1/rnnlm-one-billion/RNN_weight.OOS.cuedrnnlm.su3words.cont2/rnnlm.inpt
 
-
-
-# RNNLM v1.0 - RNNLM05
-# set LMMODEL=/home/dawna/mgb3/transcription/lms/RNNLM05/lib/lms.rescore/rnnlm/rnnlm
-set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/RNNLM05/ngrnn.intpltlm
-# set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/lms.rescore/RNNLM05/rnnlm
-
-
->>>>>>> 5f0f592fb532515cb220975e95eae033862543c2
+# ---------- training RNNLM & su-RNNLM v3 (Dec 2018) ---------- #
+# set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v3/one-billion/RNN_weight.OOS.cuedrnnlm.rnnlm.300.300/rnnlm.inpt
+# set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v3/one-billion/RNN_weight.OOS.cuedrnnlm.rnnlm.300.300.300/rnnlm.inpt
+set LMMODEL=/home/alta/BLTSpeaking/ged-pm574/gec-lm/train-rnnlm/rnnlms/v3/one-billion/RNN_weight.OOS.cuedrnnlm.surnnlm.300.300.300/rnnlm.inpt
+# ------------------------------------------------------------- #
 
 # set TASK=task61
 # set LATTICEDIR=/home/alta/BLTSpeaking/ged-pm574/gec-lm/test/$TASK/rescore/lattices/
