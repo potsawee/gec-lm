@@ -92,10 +92,13 @@ class AgidHandler(object):
     def get_candidates(self, word):
         if word in self.word_keys:
             key = self.word_keys[word]
-            return self.groups[key] + [empty_tok]
+            # return self.groups[key] + [empty_tok]
+            return self.groups[key]
 
         else: # not in AGID return the orignal word
-            return [word] + [empty_tok]
+            # return [word] + [empty_tok]
+            return [word]
+
 
 class Network(object):
     '''
@@ -136,9 +139,11 @@ class Network(object):
                         pass
                     else:
                         line = '\t{}\n'.format(stage[0])
+                        line = line.replace('%', '\%') # for partial
                         file.write(line.upper())
                 else:
                     line = '\t({})\n'.format(' | '.join(stage))
+                    line = line.replace('%', '\%') # for partial
                     file.write(line.upper())
 
             file.write('\t\\<\\/s\\>\n')
@@ -211,6 +216,7 @@ def mlf_to_sentences(mlf):
         items = line.split()
         # try:
         word = items[2].lower()
+        word = word.strip('"')
         # except:
         #     print(line)
         #     pdb.set_trace()

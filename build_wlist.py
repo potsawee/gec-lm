@@ -69,8 +69,33 @@ def gedtsv(path, out):
         for word in wlist:
             file.write('{}\n'.format(word.upper()))
 
+def gecsrc():
+    path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.gec.src'
+    out = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/wlists/conll.lst'
+    wlist = []
+    with open(path, 'r') as file:
+        for line in file:
+            if line == '\n':
+                continue
+            for word in line.split():
+                if word not in wlist:
+                    wlist.append(word)
+    lmax = 0
+    wmax = None
+    for word in wlist:
+        l = len(word)
+        if l > lmax:
+            lmax = l
+            wmax = word
+    print(lmax)
+    print(wmax)
+    with open(out, 'w') as file:
+        for word in wlist:
+            file.write('{}\n'.format(word.upper()))
+
 
 if __name__ == '__main__':
-    path = sys.argv[1]
-    out = sys.argv[2]
-    gedtsv(path, out)
+    # path = sys.argv[1]
+    # out = sys.argv[2]
+    # gedtsv(path, out)
+    gecsrc()

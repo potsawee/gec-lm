@@ -39,8 +39,8 @@ def main():
     word_generator = Generator()
     ged_threshold = 0.5
 
-    tmp2 = tmp + 'tmp2.txt'
-    write_probs(sentences_prediction, tmp2)
+    gedout = lattices + '/ged_preds.tsv'
+    write_probs(sentences_prediction, gedout)
 
     for i, sentence_prediction in enumerate(sentences_prediction):
         network = Network()

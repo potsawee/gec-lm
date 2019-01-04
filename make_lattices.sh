@@ -3,13 +3,14 @@
 
 set ALLARGS = ($*)
 # Check Number of Args
-if ( $#argv != 2 ) then
-   echo "Usage: $0 file lattices"
+if ( $#argv != 3 ) then
+   echo "Usage: $0 file lattices log"
    exit 100
 endif
 
 set FILE=$1
 set LATTICES=$2
+set LOG=$3
 
 if (! -d $LATTICES ) mkdir -p $LATTICES
 
@@ -37,4 +38,4 @@ endif
 set PYTHONBIN=/home/dawna/kmk/anaconda2/bin/python
 
 # run sequence labelling
-$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE $LATTICES
+$PYTHONBIN /home/alta/BLTSpeaking/ged-pm574/gec-lm/scripts/gec_experiment.py $FILE $LATTICES >> $LOG
