@@ -97,7 +97,7 @@ def get_gedtsv_chunk(sent_chunk):
 
 def m2_to_gedtsv():
     m2path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.m2'
-    gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.gedtsv'
+    gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.split.gedtsv'
 #     m2path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/alt/official-2014.combined-withalt.m2'
 #     gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.noprocessed.gedtsv'
 
@@ -117,19 +117,25 @@ def m2_to_gedtsv():
         for i in range(len(chunk[0])-1):
             word = chunk[0][i]
             label = chunk[1][i]
-            next_word = chunk[0][i+1]
-            next_label = chunk[1][i+1]
-            if next_word == "'s":
-                words.append(word + next_word)
-                if label == 'i' or next_label == 'i':
-                    labels.append('i')
-                else:
-                    labels.append('c')
-            elif word == "'s":
-                continue
-            else:
-                words.append(word)
-                labels.append(label)
+
+            # ------ this is for combine 's -> causes problems for idealised GED ---- #
+            # next_word = chunk[0][i+1]
+            # next_label = chunk[1][i+1]
+            # if next_word == "'s":
+            #     words.append(word + next_word)
+            #     if label == 'i' or next_label == 'i':
+            #         labels.append('i')
+            #     else:
+            #         labels.append('c')
+            # elif word == "'s":
+            #     continue
+            # else:
+            #     words.append(word)
+            #     labels.append(label)
+            # ----------------------------------------------------------------------- #
+            words.append(word)
+            labels.append(label)
+
         # last word
         if len(chunk[0]) > 0 :
             word = chunk[0][-1]
@@ -155,12 +161,12 @@ def m2_to_gedtsv():
             file.write('\n')
 
 def main():
-    # m2_to_gedtsv()
+    m2_to_gedtsv()
     # write_gec_txt(m2file='/home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt',
     #             gectxtfile='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/dtal-m2/nodisfl_train.gec.txt')
 
-    clean_up_m2(orig='/home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt',
-                out='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/dtal-m2/nodisfl_train.clean.m2.txt')
+    # clean_up_m2(orig='/home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt',
+    #             out='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/dtal-m2/nodisfl_train.clean.m2.txt')
 
 if __name__ == '__main__':
     main()
