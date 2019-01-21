@@ -15,6 +15,9 @@ def read(path):
         else:
             chunk.append(line.strip())
 
+    if chunk != []:
+        sent_chunks.append(chunk)
+
     return sent_chunks
 
 def clean_up_m2(orig, out):
@@ -96,10 +99,14 @@ def get_gedtsv_chunk(sent_chunk):
 
 
 def m2_to_gedtsv():
-    m2path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.m2'
-    gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.split.gedtsv'
+    # m2path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.m2'
+    # gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.processed.v2.split.gedtsv'
 #     m2path = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/alt/official-2014.combined-withalt.m2'
 #     gedtsv = '/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/conll14st-test-data/exp-pm574/conll.noprocessed.gedtsv'
+
+    m2path = 'lib/dtal-m2/nodisfl_train.clean.m2.txt'
+    gedtsv = 'lib/dtal-m2/nodisfl_train.gedtsv'
+
 
     sent_chunks = read(m2path)
     gedtsv_chunks = []
