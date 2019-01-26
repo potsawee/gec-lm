@@ -27,16 +27,27 @@ def clean_up_m2(orig, out):
         new_chunk = []
         # s-line
         tokens = sent_chunk[0].split()[1:]
+
+        # ---- remove '.' e.g. in NICT ---- #
+        if len(tokens) == 1:
+            if tokens[0] == '.':
+                continue
+        # --------------------------------- #
+
         sline = 'S {}'.format(' '.join(tokens).lower())
         sline = sline.strip('.')
         new_chunk.append(sline)
         # a-lines
         for line in sent_chunk[1:]:
             items = line.split('|||')
-            corr = items[2].strip('"')
+            corr = items[2].strip('"').lower()
             if corr == '_':
                 corr = ''
-            new_line = '|||'.join([items[0], items[1], corr] + items[3:])
+            try:
+                annotator = int(items[5])
+            except ValueError:
+                annotator = 1
+            new_line = '|||'.join([items[0], items[1], corr, items[3], items[4], str(annotator)])
             new_chunk.append(new_line)
         new_chunks.append(new_chunk)
 
@@ -58,7 +69,7 @@ def write_gec_txt(m2file, gectxtfile):
 
             # For the following file which has '.' at the end
             # /home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt
-            tokens = tokens[:-1]
+            # tokens = tokens[:-1]
             file.write(' '.join(tokens).lower() + '\n')
         print('write done!')
 
@@ -168,12 +179,19 @@ def m2_to_gedtsv():
             file.write('\n')
 
 def main():
-    m2_to_gedtsv()
+    # m2_to_gedtsv()
+
     # write_gec_txt(m2file='/home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt',
     #             gectxtfile='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/dtal-m2/nodisfl_train.gec.txt')
 
     # clean_up_m2(orig='/home/alta/BLTSpeaking/ged-kmk/dtal/data/GEM4/M2/NODISFL_train.cuedsorted.M2.txt',
     #             out='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/dtal-m2/nodisfl_train.clean.m2.txt')
+
+    # 26 january 2019 - NICT-JLE
+    # clean_up_m2(orig='/home/alta/NICT/M2-map/NODISFL_E_file-int.txt',
+    #             out='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/nict/m2/NODISFL_E_file-int.map.clean.txt')
+    write_gec_txt(m2file='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/nict/m2/NODISFL_E_file.map.clean.txt',
+                gectxtfile='/home/alta/BLTSpeaking/ged-pm574/gec-lm/lib/nict/gec-input/NODISFL_E_file.map.gec.txt')
 
 if __name__ == '__main__':
     main()
