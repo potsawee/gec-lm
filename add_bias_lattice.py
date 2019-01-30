@@ -99,7 +99,7 @@ def read_lattice(latpath):
     lines = [line.decode('UTF-8').strip() for line in lines]
 
     # skip headers
-    headers = lines[:6]
+    header = lines[:6]
     a = lines[5].split()
     N = int(a[0].strip('N='))
     L = int(a[1].strip('L='))
@@ -126,16 +126,89 @@ def read_lattice(latpath):
         S = int(items[1].strip('S='))
         E = int(items[2].strip('E='))
 
-        # a = float(items[3].strip('a='))
+        a = float(items[3].strip('a='))
         l = float(items[4].strip('l='))
-        # r = float(items[5].strip('r='))
+        r = float(items[5].strip('r='))
 
-        edges[J] = (S, E, l)
+        edges[J] = (S, E, a, l, r)
 
-    return headers, nodes, edges
-    
-def add_bias():
-    pass
+    return header, nodes, edges
+
+def read_reference(refpath):
+    """
+    reference aka source to GEC system
+    return:
+        references where
+            references[0] = [('<s>', 'keeping'), ('keeping', 'the'), ('the', 'secret'), ...]
+            etc
+    """
+    references = []
+    with open(refpath, 'r') as file:
+        for line in file:
+            words = line.strip().split()
+            words = ['<s>'] + words
+            words = words + ['</s>']
+
+            ref = []
+
+            for i in range(len(words)-1):
+                ref.append((words[i], words[i+1]))
+
+            references.append(ref)
+
+    return references
+
+def add_bias(bias, refpath, latdir_in, latdir_out):
+    references = read_reference(refpath=refpath)
+    num_lat = len(references)
+    for i in range(num_lat):
+        lat_in = latdir_in + "/sentence{}.lat.gz".format(i)
+        lat_out = latdir_out + "/sentence{}.lat.gz".format(i)
+        header, nodes, edges = read_lattice(latpath=lat_in)
+        reference = references[i]
+
+        for j, val in edges.items():
+            S, E, a, l, r = val
+            word_s = nodes[S]
+            word_e = nodes[E]
+
+            if (word_s, word_e) in reference:
+                a += bias
+
+            edges[j] = (S,E,a,l,r)
+
+        write_new_lattice(lat_out, header, nodes, edges)
+
+
+def write_new_lattice(latpath, header, nodes, edges):
+    with gzip.open(latpath, 'wb') as file:
+        for line in header:
+            line = line + '\n'
+            file.write(line.encode())
+
+        for i, word in nodes.items():
+
+            if word not in ['<s>', '</s>']:
+                word = word.upper()
+
+            line = "I={}\tt=0.00\tW={}\n".format(i, word)
+            file.write(line.encode())
+
+        for j, val in edges.items():
+
+            S, E, a, l, r = val
+
+            line = "J={}\tS={}\tE={}\ta={:.2f}\tl={:.3f}\tr={:.3f}\n".format(j,S,E,a,l,r)
+            file.write(line.encode())
+
+    print("wrote: ", latpath)
+    return
 
 if __name__ == '__main__':
-    read_lattice('tmp-bias/sentence3.lat.gz')
+    refpath = 'tmp-bias/conll_first4.gec.src'
+    latdir_in = 'tmp-bias/lat_in'
+    latdir_out = 'tmp-bias/lat_out'
+
+    bias = 50
+
+    add_bias(bias, refpath, latdir_in, latdir_out)
