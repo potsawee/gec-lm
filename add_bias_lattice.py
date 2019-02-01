@@ -90,6 +90,8 @@ J=31    S=28   E=29   a=0.00      l=0.000   r=0.000
 import gzip
 import sys
 import pdb
+import os
+from helper import make_scp
 
 def read_lattice(latpath):
 
@@ -115,9 +117,9 @@ def read_lattice(latpath):
 
     for line in _nodes:
         items = line.split()
-        I = int(items[0].strip('I='))
+        I = int(items[0][2:]) # remove 'I='
         # t = float(items[1].strip('t='))
-        W = items[2].strip('W=').lower()
+        W = items[2][2:].lower() # remove 'W='
         nodes[I] = W
 
     for line in _edges:
@@ -163,7 +165,9 @@ def add_bias(bias, refpath, latdir_in, latdir_out):
     num_lat = len(references)
     for i in range(num_lat):
         lat_in = latdir_in + "/sentence{}.lat.gz".format(i)
-        lat_out = latdir_out + "/sentence{}.lat.gz".format(i)
+        # lat_out = latdir_out + "/sentence{}.lat.gz".format(i)
+        lat_out = latdir_out + "/sentence{}.lat".format(i)
+
         header, nodes, edges = read_lattice(latpath=lat_in)
         reference = references[i]
 
@@ -177,38 +181,79 @@ def add_bias(bias, refpath, latdir_in, latdir_out):
 
             edges[j] = (S,E,a,l,r)
 
-        write_new_lattice(lat_out, header, nodes, edges)
+        write_new_lattice(lat_out, header, nodes, edges, gzip=False)
 
 
-def write_new_lattice(latpath, header, nodes, edges):
-    with gzip.open(latpath, 'wb') as file:
-        for line in header:
-            line = line + '\n'
-            file.write(line.encode())
+def write_new_lattice(latpath, header, nodes, edges, gzip=False):
+    if gzip:
+        with gzip.open(latpath, 'wb') as file:
+            for line in header:
+                line = line + '\n'
+                file.write(line.encode())
 
-        for i, word in nodes.items():
+            for i, word in nodes.items():
 
-            if word not in ['<s>', '</s>']:
-                word = word.upper()
+                if word not in ['<s>', '</s>']:
+                    word = word.upper()
 
-            line = "I={}\tt=0.00\tW={}\n".format(i, word)
-            file.write(line.encode())
+                line = "I={}\tt=0.00\tW={}\n".format(i, word)
+                file.write(line.encode())
 
-        for j, val in edges.items():
+            for j, val in edges.items():
 
-            S, E, a, l, r = val
+                S, E, a, l, r = val
 
-            line = "J={}\tS={}\tE={}\ta={:.2f}\tl={:.3f}\tr={:.3f}\n".format(j,S,E,a,l,r)
-            file.write(line.encode())
+                line = "J={}\tS={}\tE={}\ta={:.2f}\tl={:.3f}\tr={:.3f}\n".format(j,S,E,a,l,r)
+                file.write(line.encode())
+
+    else:
+        with open(latpath, 'w') as file:
+            for line in header:
+                line = line + '\n'
+                file.write(line)
+
+            for i, word in nodes.items():
+
+                if word not in ['<s>', '</s>']:
+                    word = word.upper()
+
+                line = "I={}\tt=0.00\tW={}\n".format(i, word)
+                file.write(line)
+
+            for j, val in edges.items():
+
+                S, E, a, l, r = val
+
+                line = "J={}\tS={}\tE={}\ta={:.2f}\tl={:.3f}\tr={:.3f}\n".format(j,S,E,a,l,r)
+                file.write(line)
 
     print("wrote: ", latpath)
     return
 
-if __name__ == '__main__':
-    refpath = 'tmp-bias/conll_first4.gec.src'
-    latdir_in = 'tmp-bias/lat_in'
-    latdir_out = 'tmp-bias/lat_out'
+def main():
+    # refpath = 'tmp-bias/conll_first4.gec.src'
+    # latdir_in = 'tmp-bias/lat_in'
+    # latdir_out = 'tmp-bias/lat_out'
 
-    bias = 50
+    if len(sys.argv) != 5:
+        print("Usage: python3 add_bias_lattice.py bias refpath latdir_in latdir_out")
+        return
+
+    bias = float(sys.argv[1])
+    refpath = sys.argv[2]
+    latdir_in = sys.argv[3]
+    latdir_out = sys.argv[4]
+
+    if not os.path.exists(latdir_out):
+        print("created latdir_out: ", latdir_out)
+        os.makedirs(latdir_out)
 
     add_bias(bias, refpath, latdir_in, latdir_out)
+
+    scp_path = latdir_out + "/flist.scp"
+    num = 3659 # conll=1312, dtal=3659
+    print('scp_num =', num)
+    make_scp(scp_path, latdir_out, num)
+
+if __name__ == '__main__':
+    main()
